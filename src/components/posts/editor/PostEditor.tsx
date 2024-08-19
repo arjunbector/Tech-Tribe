@@ -38,7 +38,7 @@ const PostEditor = () => {
         <UserAvatar avatarUrl={user.avatarUrl} className="hidden sm:inline" />
         <EditorContent
           editor={editor}
-          className="max-h-80 w-full overflow-y-auto rounded-2xl bg-background px-5 py-3"
+          className="max-h-80 min-h-20 w-full overflow-y-auto rounded-2xl bg-background px-5 py-3"
         />
       </div>
       <div className="flex justify-end">
