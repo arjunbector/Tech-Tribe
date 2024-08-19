@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    template:"%s | Tech-Tribe",
-    default:'Tech-Tribe'
+    template: "%s | Tech-Tribe",
+    default: "Tech-Tribe",
   },
   description: "Social media for developers",
 };
@@ -19,7 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+        >{children}</ThemeProvider>
+      </body>
     </html>
   );
 }
