@@ -3,6 +3,7 @@
 import { lucia } from "@/auth";
 import prisma from "@/lib/prisma";
 import { loginSchema, LoginValues } from "@/lib/validation";
+// @ts-ignore
 import bcrypt from "bcrypt";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import { redirect } from "next/navigation";

@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 
 export async function logout() {
     const { session } = await validateRequest();
-    if (session) {
+    if (!session) {
         throw new Error("Session not found");
     }
     await lucia.invalidateSession(session!.id);

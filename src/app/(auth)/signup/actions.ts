@@ -7,6 +7,7 @@ import { generateIdFromEntropySize } from "lucia";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+// @ts-ignore
 import bcrypt from "bcrypt";
 
 export async function signUp(
