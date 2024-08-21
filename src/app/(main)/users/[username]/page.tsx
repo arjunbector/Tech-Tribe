@@ -67,7 +67,7 @@ const UserProfilePage = async ({ params: { username } }: UserPageProps) => {
             {user.displayName}&apos;s posts
           </h2>
         </div>
-        <UserPostsFeed userId={user.id}/>
+        <UserPostsFeed userId={user.id} />
       </div>
       <TrendsSidebar />
     </main>
@@ -82,7 +82,7 @@ async function UserProfile({ loggedInUserId, user }: UserProfileProps) {
   const followerInfo: FollowerInfo = {
     followers: user._count.followers,
     isFollowedByUser: user.followers.some(
-      ({followerId}) => followerId === loggedInUserId,
+      ({ followerId }: { followerId: string }) => followerId === loggedInUserId,
     ),
   };
   return (
