@@ -10,12 +10,20 @@ export async function GET(req: NextRequest) {
         const { user } = await validateRequest();
         if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
         const posts = await prisma.post.findMany({
-            include: getPostDataInclude(user.id),
+            where: {
+                user: {
+                    followers: {
+                        some: {
+                            followerId: user.id
+                        }
+                    }
+                }
+            },
             orderBy: { createdAt: "desc" },
             take: pageSize + 1,
-            cursor: cursor ? { id: cursor } : undefined
-        });
-
+            cursor: cursor ? { id: cursor } : undefined,
+            include: getPostDataInclude(user.id)
+        })
         const nextCursor = posts.length > pageSize ? posts[posts.length - 1].id : null;
         const data: PostsPage = {
             posts: posts.slice(0, pageSize),
@@ -23,8 +31,9 @@ export async function GET(req: NextRequest) {
         }
         return Response.json(data);
     }
+
     catch (err) {
         console.log(err);
         return Response.json({ error: "Internal server error" }, { status: 500 });
     }
-}   
+}
