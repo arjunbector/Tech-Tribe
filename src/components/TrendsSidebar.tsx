@@ -67,7 +67,7 @@ async function WhoToFllow() {
             initialState={{
               followers: user._count.followers,
               isFollowedByUser: user.followers.some(
-                (follower) => follower.followerId === user.id,
+                ({followerId}) => followerId === user.id,
               ),
             }}
           />
