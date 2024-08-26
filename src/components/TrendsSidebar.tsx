@@ -47,7 +47,7 @@ async function WhoToFllow() {
   return (
     <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm">
       <div className="text-xl font-bold">Who to follow</div>
-      {usersToFollow.map((user:UserData) => (
+      {usersToFollow.map((user: UserData) => (
         <div key={user.id} className="flex items-center justify-between gap-3">
           <UserTooltip user={user}>
             <Link
@@ -91,7 +91,7 @@ const getTrendingTopics = unstable_cache(
     LIMIT 5
 `;
 
-    return result.map((row) => ({
+    return result.map((row: { hashtag: string; count: BigInt }) => ({
       hashtag: row.hashtag,
       count: Number(row.count),
     }));
