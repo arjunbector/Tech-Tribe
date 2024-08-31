@@ -2,11 +2,14 @@
 import { PostData } from "@/lib/types";
 import Link from "next/link";
 import UserAvatar from "../UserAvatar";
-import { formatRelativeDate } from "@/lib/utils";
+import { cn, formatRelativeDate } from "@/lib/utils";
 import { useSession } from "@/app/(main)/SessionProvider";
 import PostMoreButton from "./PostMoreButton";
 import Linkify from "../Linkify";
 import UserTooltip from "../UserTooltip";
+import { Media } from "@prisma/client";
+import Image from "next/image";
+import { attachReactRefresh } from "next/dist/build/webpack-config";
 
 interface PostProps {
   post: PostData;
@@ -49,8 +52,60 @@ const Post = ({ post }: PostProps) => {
       <Linkify>
         <div className="whitespace-pre-line break-words">{post.content}</div>
       </Linkify>
+      {!!post.attachments.length && (
+        <MediaPreviews attachments={post.attachments} />
+      )}
     </article>
   );
 };
 
 export default Post;
+
+interface MediaPreiveiwsProps {
+  attachments: Media[];
+}
+const MediaPreviews = ({ attachments }: MediaPreiveiwsProps) => {
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-3",
+        attachments.length > 1 && "grid-cols-2 sm:grid",
+      )}
+    >
+      {attachments.map((attachment) => (
+        <MediaPreview key={attachment.id} attachment={attachment} />
+      ))}
+    </div>
+  );
+};
+
+interface MediaPreviewProps {
+  attachment: Media;
+}
+const MediaPreview = ({ attachment }: MediaPreviewProps) => {
+  if (attachment.mediaType === "IMAGE") {
+    return (
+      <Image
+        src={attachment.url}
+        alt="attachment"
+        height={500}
+        width={500}
+        className="mx-auto size-fit max-h-[30rem] rounded-2xl"
+      />
+    );
+  }
+  if (attachment.mediaType === "VIDEO") {
+    return (
+      <div>
+        <video
+          controls
+          className="mx-auto size-fit max-h-[30rem] rounded-2xl"
+          src={attachment.url}
+          loop
+          autoPlay
+        />
+      </div>
+    );
+  }
+  return <p className="text-destructive">Unsupported media type</p>;
+};
