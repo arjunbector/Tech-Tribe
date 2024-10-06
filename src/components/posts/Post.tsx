@@ -35,6 +35,7 @@ const Post = ({ post }: PostProps) => {
               </Link>
             </UserTooltip>
             <Link
+              suppressHydrationWarning
               href={`/posts/${post.id}`}
               className="block text-sm text-muted-foreground hover:underline"
             >
