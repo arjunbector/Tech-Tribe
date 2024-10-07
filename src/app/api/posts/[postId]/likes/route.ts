@@ -54,7 +54,15 @@ export async function POST(req: NextRequest,
         if (!loggedInUser) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-        await prisma.like.upsert({
+        const post = await prisma.post.findUnique({
+            where: { id: postId },
+            select: {
+                userId: true
+            }
+        })
+        if (!post) return NextResponse.json({ error: "Post not found" }, { status: 404 });
+
+        await prisma.$transaction([prisma.like.upsert({
             where: {
                 userId_postId: {
                     postId: postId,
@@ -66,7 +74,14 @@ export async function POST(req: NextRequest,
                 postId: postId
             },
             update: {}
-        })
+        }), ...(loggedInUser.id !== post.userId ? [prisma.notification.create({
+            data: {
+                issuerId: loggedInUser.id,
+                recipientId: post.userId,
+                postId,
+                type: "LIKE"
+            }
+        })] : [])])
         return new Response();
 
     }
@@ -83,12 +98,30 @@ export async function DELETE(req: NextRequest,
         if (!loggedInUser) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-        await prisma.like.deleteMany({
-            where: {
-                userId: loggedInUser.id,
-                postId: postId
+        const post = await prisma.post.findUnique({
+            where: { id: postId },
+            select: {
+                userId: true
             }
         })
+        if (!post) return NextResponse.json({ error: "Post not found" }, { status: 404 });
+
+        await prisma.$transaction([
+            prisma.like.deleteMany({
+                where: {
+                    userId: loggedInUser.id,
+                    postId: postId
+                }
+            }),
+            prisma.notification.deleteMany({
+                where: {
+                    issuerId: loggedInUser.id,
+                    recipientId: post.userId,
+                    postId,
+                    type: "LIKE"
+                }
+            })
+        ])
         return new Response();
     }
     catch (err) {

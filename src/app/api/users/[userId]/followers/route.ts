@@ -53,19 +53,28 @@ export async function POST(req: NextRequest,
         if (!loggedInUser) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-        await prisma.follow.upsert({
-            where: {
-                followerId_followingId: {
-                    followerId: loggedInUser.id,
+        await prisma.$transaction([
+            prisma.follow.upsert({
+                where: {
+                    followerId_followingId: {
+                        followerId: loggedInUser.id,
+                        followingId: userId
+                    }
+                },
+                create: {
+                    followerId: loggedInUser?.id,
                     followingId: userId
+                },
+                update: {}
+            }),
+            prisma.notification.create({
+                data: {
+                    issuerId: loggedInUser.id,
+                    recipientId: userId,
+                    type: "FOLLOW"
                 }
-            },
-            create: {
-                followerId: loggedInUser?.id,
-                followingId: userId
-            },
-            update: {}
-        })
+            })
+        ])
         return new Response();
     }
     catch (err) {
@@ -83,12 +92,21 @@ export async function DELETE(req: NextRequest,
         if (!loggedInUser) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-        await prisma.follow.deleteMany({
-            where: {
-                followerId: loggedInUser.id,
-                followingId: userId
-            }
-        })
+        await prisma.$transaction([
+            prisma.follow.deleteMany({
+                where: {
+                    followerId: loggedInUser.id,
+                    followingId: userId
+                }
+            }),
+            prisma.notification.deleteMany({
+                where: {
+                    issuerId: loggedInUser.id,
+                    recipientId: userId,
+                    type: "FOLLOW"
+                }
+            })
+        ])
         return new Response();
     }
     catch (err) {
