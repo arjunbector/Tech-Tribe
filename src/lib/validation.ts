@@ -16,7 +16,7 @@ export type LoginValues = z.infer<typeof loginSchema>
 
 export const createPostSchema = z.object({
     content: z.string().min(1, "Content is required"),
-    mediaIds:z.array(z.string()).max(5, "Cannot upload more than 5 attachments")
+    mediaIds: z.array(z.string()).max(5, "Cannot upload more than 5 attachments")
 })
 
 export const updateUserProfileSchema = z.object({
@@ -25,3 +25,7 @@ export const updateUserProfileSchema = z.object({
 })
 
 export type UpdateUserProfileValues = z.infer<typeof updateUserProfileSchema>
+
+export const createCommentSchema = z.object({
+    content: z.string().min(1, "Content is required"),
+})
