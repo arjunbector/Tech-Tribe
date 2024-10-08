@@ -9,18 +9,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 // @ts-ignore
 import bcrypt from "bcrypt";
+import streamServerClient from "@/lib/stream";
 
 export async function signUp(
     credentials: SignUpValues
 ): Promise<{ error: string }> {
     try {
         const { username, email, password } = signUpSchema.parse(credentials);
-        // const passwordHash = await hash(password, {
-        //     memoryCost: 19456,
-        //     timeCost: 2,
-        //     outputLen: 32,
-        //     parallelism: 2,
-        // })
         const passwordHash = await bcrypt.hash(password, 10);
         const userId = generateIdFromEntropySize(10);
         const existingUsername = await prisma.user.findFirst({
@@ -49,15 +44,24 @@ export async function signUp(
                 error: "Email is already registered"
             }
         }
-        await prisma.user.create({
-            data: {
+        await prisma.$transaction(async (tx) => {
+            await tx.user.create({
+                data: {
+                    id: userId,
+                    username: username,
+                    displayName: username,
+                    email: email,
+                    passwordHash: passwordHash
+                }
+            })
+            await streamServerClient.upsertUser({
                 id: userId,
-                username: username,
-                displayName: username,
-                email: email,
-                passwordHash: passwordHash
-            }
+                username,
+                name: username
+            })
         })
+
+
 
         const session = await lucia.createSession(userId, {});
         const sessionCookie = lucia.createSessionCookie(session.id);
