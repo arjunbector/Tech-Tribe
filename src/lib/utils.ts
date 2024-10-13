@@ -27,3 +27,11 @@ export const formatNumber = (n: number): string => {
 export function slugify(input: string): string {
   return input.toLowerCase().replace(/ /g, "-").replace(/[^a-z0-9-]/g, "")
 }
+export const checkEnvironment = () => {
+  let baseUrl =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://techtribe.arjunbector.live";
+
+  return {baseUrl};
+};

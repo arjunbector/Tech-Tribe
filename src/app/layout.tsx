@@ -15,7 +15,8 @@ export const metadata: Metadata = {
     template: "%s | Tech-Tribe",
     default: "Tech-Tribe",
   },
-  description: "Social media for developers",
+  description:
+    "Join Tech-Tribe, the ultimate social media platform for developers! Connect with fellow tech enthusiasts, share your projects, and collaborate on innovative ideas. Whether you're a seasoned professional or a coding beginner, Tech-Tribe is your go-to community for inspiration, support, and networking in the world of technology. Dive into discussions, showcase your skills, and discover the latest trends in development. Become a part of the Tech-Tribe today!",
 };
 
 export default function RootLayout({
