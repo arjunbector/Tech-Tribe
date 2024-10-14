@@ -8,6 +8,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { fileRouter } from "./api/uploadthing/core";
 import { Analytics } from "@vercel/analytics/react";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <head>
+          <Script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-7ZQDY2N75K"
+          ></Script>
+          <Script id="google-analytics">
+            {`window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-7ZQDY2N75K');`}
+          </Script>
+        </head>
         <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
         <ReactQuesryProvider>
           <ThemeProvider
