@@ -21,6 +21,7 @@ export const createPostSchema = z.object({
 
 export const updateUserProfileSchema = z.object({
     displayName: z.string().min(1, "Display name is required"),
+    username: z.string().min(1, "Username cannot be empty").max(20, "Username must be atmost 20 characters"),
     bio: z.string().max(1000, "Must be atmost 1000 characters"),
 })
 

@@ -51,7 +51,7 @@ export function useUpdateProfileMutation() {
                     }
                 }
             )
-            router.refresh();
+            router.push(`/users/${updatedUser.username}`);
             toast({
                 description: "Profile updated"
             })
@@ -60,7 +60,7 @@ export function useUpdateProfileMutation() {
             console.error(err);
             toast({
                 variant: "destructive",
-                description: "Failed to update profile",
+                description: err.message,
             })
         }
     })

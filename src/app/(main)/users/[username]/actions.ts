@@ -13,6 +13,15 @@ export async function updateUserProfile(values: UpdateUserProfileValues) {
         throw new Error("Unauthorized");
     }
 
+    const existingUser = await prisma.user.findUnique({
+        where: { username: validatedValues.username }
+    })
+    console.log(existingUser);
+
+    if (existingUser && existingUser.username === validatedValues.username && user.username !== validatedValues.username) {
+        throw new Error("Username is already taken");
+    }
+
     const updatedUser = await prisma.$transaction(async (tx) => {
         const updatedUser = await tx.user.update({
             where: { id: user.id },
