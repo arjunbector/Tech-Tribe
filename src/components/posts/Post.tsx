@@ -118,6 +118,30 @@ interface MediaPreviewProps {
   attachment: Media;
 }
 const MediaPreview = ({ attachment }: MediaPreviewProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            videoElement.play();
+          } else {
+            videoElement.pause();
+          }
+        });
+      },
+      { threshold: 0.5 }, // Adjust the threshold as needed
+    );
+
+    observer.observe(videoElement);
+
+    return () => {
+      observer.unobserve(videoElement);
+    };
+  }, []);
   if (attachment.mediaType === "IMAGE") {
     return (
       <Image
@@ -130,32 +154,6 @@ const MediaPreview = ({ attachment }: MediaPreviewProps) => {
     );
   }
   if (attachment.mediaType === "VIDEO") {
-    const videoRef = useRef<HTMLVideoElement>(null);
-
-    useEffect(() => {
-      const videoElement = videoRef.current;
-      if (!videoElement) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              videoElement.play();
-            } else {
-              videoElement.pause();
-            }
-          });
-        },
-        { threshold: 0.5 }, // Adjust the threshold as needed
-      );
-
-      observer.observe(videoElement);
-
-      return () => {
-        observer.unobserve(videoElement);
-      };
-    }, []);
-
     return (
       <div>
         <video
