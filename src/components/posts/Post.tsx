@@ -6,7 +6,7 @@ import { Media } from "@prisma/client";
 import { MessageSquareIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { LegacyRef, useEffect, useRef, useState } from "react";
 import Comments from "../comments/Comments";
 import Linkify from "../Linkify";
 import UserAvatar from "../UserAvatar";
@@ -130,14 +130,40 @@ const MediaPreview = ({ attachment }: MediaPreviewProps) => {
     );
   }
   if (attachment.mediaType === "VIDEO") {
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    useEffect(() => {
+      const videoElement = videoRef.current;
+      if (!videoElement) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              videoElement.play();
+            } else {
+              videoElement.pause();
+            }
+          });
+        },
+        { threshold: 0.5 }, // Adjust the threshold as needed
+      );
+
+      observer.observe(videoElement);
+
+      return () => {
+        observer.unobserve(videoElement);
+      };
+    }, []);
+
     return (
       <div>
         <video
+          ref={videoRef}
           controls
           className="mx-auto size-fit max-h-[30rem] rounded-2xl"
           src={attachment.url}
           loop
-          autoPlay
         />
       </div>
     );
