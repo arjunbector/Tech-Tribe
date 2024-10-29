@@ -1,4 +1,4 @@
-# Lingo
+# Tech Tribe
 
 ## Table of Contents
 
@@ -12,7 +12,7 @@
 - Clean and responsive UI.
 - Authorization using Lucia.
 - Caching using React-Query (Tanstack-Query).
-- Infinit Scrolling.
+- Infinite Scrolling.
 - Image uploading on Uploadthing.
 
 ## About
