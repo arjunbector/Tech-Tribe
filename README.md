@@ -33,8 +33,8 @@ Instructions to get a copy of the project up and running on your local machine.
 Clone the repo and install dependencies:
 
 ```bash
-git clone https://github.com/arjunbector/Lingo.git
-cd lingo
+git clone https://github.com/arjunbector/Tech-Tribe.git
+cd Tech-Tribe
 ```
 
 ```
@@ -65,4 +65,4 @@ Navigate to http://localhost:3000. The page will automatically reload if you mak
 
 ## Wanna Try?
 
-[Try here](https://lingo-three-pi.vercel.app/)
+[Try here](https://techtribe.arjunbector.live/)
